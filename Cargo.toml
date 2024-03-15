@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["crates/spec"]
+members = ["crates/*"]
 
 [workspace.package]
 edition = "2021"
@@ -13,6 +13,9 @@ readme = "readme.md"
 tracing    = { version = "0" }
 thiserror  = { version = "1" }
 serde      = { version = "1", features = ["derive"] }
+serde_json = { version = "1" }
+
+spuz_spec  = { path = "crates/spec" }
 
 [workspace.lint.rust]
 [workspace.lints.clippy]

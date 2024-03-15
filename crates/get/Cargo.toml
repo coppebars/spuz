@@ -1,0 +1,15 @@
+[package]
+name = "spuz_get"
+version = "0.1.0"
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+
+[dependencies]
+tokio   = { version = "1", features = ["sync", "parking_lot", "rt-multi-thread", "fs", "io-std"] }
+reqwest = { version = "0", features = ["serde_json", "stream"] }
+
+[lints]
+workspace = true

@@ -10,11 +10,11 @@ pub enum VersionType {
 }
 
 impl VersionType {
-	pub fn is_release(&self) -> bool {
+	pub fn is_release(self) -> bool {
 		matches!(self, Self::Release)
 	}
 
-	pub fn is_snapshot(&self) -> bool {
+	pub fn is_snapshot(self) -> bool {
 		!self.is_release()
 	}
 }
