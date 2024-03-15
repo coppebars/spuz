@@ -66,11 +66,10 @@ impl<'de> Deserialize<'de> for PackageName {
 
 				cfg_if! {
 					if #[cfg(feature = "semver")] {
-						use semver::Version;
 						Ok(PackageName {
 							package: parts[0].split('.').collect(),
 							name: parts[1].into(),
-							version: Version::parse(parts[2]).unwrap_or(Version::new(0, 0, 0)),
+							version: semver::Version::parse(parts[2]).unwrap_or(semver::Version::new(0, 0, 0)),
 						})
 					} else {
 						Ok(PackageName {

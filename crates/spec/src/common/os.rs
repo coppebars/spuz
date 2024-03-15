@@ -10,7 +10,7 @@ pub enum Os {
 }
 
 impl Os {
-	pub fn target() -> Self {
+	pub const fn target() -> Self {
 		cfg_if! {
 			if #[cfg(target_os = "linux")] {
 				Self::Linux
@@ -37,7 +37,7 @@ pub enum Arch {
 }
 
 impl Arch {
-	pub fn target() -> Self {
+	pub const fn target() -> Self {
 		cfg_if! {
 			if #[cfg(any(target_arch = "x86_64", target_arch = "aarch64"))] {
 				Self::X64
