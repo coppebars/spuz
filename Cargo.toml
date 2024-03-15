@@ -6,6 +6,8 @@ members = ["crates/spec"]
 edition = "2021"
 authors = ["Danil Karpenko <limpix31@gmail.com>"]
 license = "MIT"
+repository = "https://github.com/coppebars/spuz.git"
+readme = "readme.md"
 
 [workspace.dependencies]
 tracing    = { version = "0" }
@@ -21,3 +23,4 @@ module_name_repetitions = "allow"
 too_many_lines = "allow"
 must_use_candidate = "allow"
 missing_const_for_fn = "allow"
+cargo_common_metadata = "allow"
