@@ -24,7 +24,7 @@ impl<T> ListOrValue<T> {
 	pub fn is_list(&self) -> bool {
 		matches!(self, Self::List(_))
 	}
-	
+
 	pub fn is_value(&self) -> bool {
 		!self.is_list()
 	}

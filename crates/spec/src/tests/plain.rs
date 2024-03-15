@@ -1,4 +1,5 @@
 use serde_json::from_str;
+
 use crate::client::latest::ClientVersion;
 
 #[test]
