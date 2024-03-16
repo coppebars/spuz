@@ -1,5 +1,5 @@
 [package]
-name = "spuz_ir"
+name = "spuz_fsp"
 version = "0.1.0"
 edition.workspace = true
 authors.workspace = true
@@ -8,7 +8,6 @@ repository.workspace = true
 readme.workspace = true
 
 [dependencies]
-serde = { workspace = true }
 
 [lints]
 workspace = true
