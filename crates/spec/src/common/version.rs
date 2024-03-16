@@ -1,6 +1,7 @@
 use std::ops::Deref;
 
 use serde::{Deserialize, Serialize};
+
 use crate::common::Str;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]

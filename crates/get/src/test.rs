@@ -1,5 +1,4 @@
-use crate::Fetch;
-use crate::vanilla::VanillaFetch;
+use crate::{vanilla::VanillaFetch, Fetch};
 
 #[tokio::test]
 pub async fn test_1() {

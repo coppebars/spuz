@@ -2,7 +2,7 @@ use reqwest::Client;
 
 #[derive(Debug, Default)]
 pub struct Fetch {
-	pub client: Client
+	pub client: Client,
 }
 
 impl Fetch {
