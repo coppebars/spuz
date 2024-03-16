@@ -821,18 +821,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "spuz_fsp"
+version = "0.1.0"
+
+[[package]]
 name = "spuz_get"
 version = "0.1.0"
 dependencies = [
  "reqwest",
- "tokio",
-]
-
-[[package]]
-name = "spuz_ir"
-version = "0.1.0"
-dependencies = [
  "serde",
+ "spuz_spec",
+ "thiserror",
+ "tokio",
+ "url",
 ]
 
 [[package]]

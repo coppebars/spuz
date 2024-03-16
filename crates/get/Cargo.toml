@@ -8,8 +8,17 @@ repository.workspace = true
 readme.workspace = true
 
 [dependencies]
+spuz_spec = { workspace = true, features = ["url"] }
+
+thiserror = { workspace = true }
+serde     = { workspace = true }
+
 tokio   = { version = "1", features = ["sync", "parking_lot", "rt-multi-thread", "fs", "io-std"] }
-reqwest = { version = "0", features = ["serde_json", "stream"] }
+reqwest = { version = "0", features = ["json", "stream"] }
+url     = { version = "2" }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
 
 [lints]
 workspace = true

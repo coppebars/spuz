@@ -2,7 +2,7 @@ use std::{error::Error, fs, io::Read, path::PathBuf};
 
 use bpaf::Bpaf;
 use serde_json::from_str;
-use spuz_spec::client::latest::ClientVersion;
+use spuz_spec::vanilla::client::latest::ClientVersion;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
