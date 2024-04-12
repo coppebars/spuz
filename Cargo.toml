@@ -10,12 +10,13 @@ repository = "https://github.com/coppebars/spuz.git"
 readme = "readme.md"
 
 [workspace.dependencies]
-tracing    = { version = "0" }
-thiserror  = { version = "1" }
-serde      = { version = "1", features = ["derive"] }
-serde_json = { version = "1" }
+tracing      = { version = "0" }
+thiserror    = { version = "1" }
+serde        = { version = "1", features = ["derive"] }
+serde_json   = { version = "1" }
 
-spuz_spec  = { path = "crates/spec" }
+spuz_piston  = { path = "crates/spuz_piston" }
+spuz_folder  = { path = "crates/spuz_folder" }
 
 [workspace.lint.rust]
 [workspace.lints.clippy]
@@ -28,3 +29,5 @@ must_use_candidate = "allow"
 missing_const_for_fn = "allow"
 cargo_common_metadata = "allow"
 multiple_crate_versions = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"

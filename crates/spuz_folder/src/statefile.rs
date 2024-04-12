@@ -7,7 +7,6 @@ use std::{
 	sync::Arc,
 };
 
-use futures::TryFutureExt;
 use serde::{Deserialize, Serialize};
 use tokio::{
 	fs::File,
@@ -29,10 +28,7 @@ pub struct State {
 #[allow(clippy::derivable_impls)]
 impl Default for State {
 	fn default() -> Self {
-		Self {
-			integrity: HashMap::new(),
-			fds: HashMap::new(),
-		}
+		Self { integrity: HashMap::new(), fds: HashMap::new() }
 	}
 }
 
@@ -105,9 +101,7 @@ pub struct StateRead {
 
 impl StateRead {
 	async fn new(rw: Arc<RwLock<State>>) -> Self {
-		Self {
-			state: rw.read_owned().await,
-		}
+		Self { state: rw.read_owned().await }
 	}
 }
 
@@ -127,10 +121,7 @@ pub struct StateWrite {
 
 impl StateWrite {
 	async fn new(rw: Arc<RwLock<State>>, path: Arc<Path>) -> Self {
-		Self {
-			state: rw.write_owned().await,
-			path,
-		}
+		Self { state: rw.write_owned().await, path }
 	}
 
 	pub async fn save(&self) -> Result<()> {
@@ -162,10 +153,7 @@ impl Statefile {
 	pub async fn load(path: &Path) -> Result<Self> {
 		let raw_state = State::load(path).await?;
 		let state = Arc::new(RwLock::new(raw_state));
-		Ok(Self {
-			state,
-			path: path.into(),
-		})
+		Ok(Self { state, path: path.into() })
 	}
 
 	pub async fn read(&self) -> StateRead {

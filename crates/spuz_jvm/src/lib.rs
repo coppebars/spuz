@@ -2,18 +2,17 @@ use std::{
 	collections::HashMap,
 	path::PathBuf,
 	process::Stdio,
-	sync::{atomic::AtomicBool, Arc},
+	sync::{Arc, atomic::AtomicBool},
 };
 
 use bytes::BytesMut;
-pub use err::*;
 use tokio::{
 	io::AsyncReadExt,
 	process::Command,
 	sync::{broadcast, Mutex, Notify},
 };
 
-use crate::Result;
+pub use err::{Error, Result};
 
 mod err;
 
@@ -79,9 +78,7 @@ impl Jvm {
 							}
 
 							let bytes = &$buf[..read];
-							let Ok(str) = ::std::str::from_utf8(bytes) else {
-								unreachable!()
-							};
+							let Ok(str) = ::std::str::from_utf8(bytes) else { unreachable!() };
 							if $stdx.send(str.to_owned()).is_err() {
 								$ended.notify_one();
 								break;
@@ -105,11 +102,7 @@ impl Jvm {
 			}
 		});
 
-		Ok(Process {
-			err,
-			ended,
-			stdx: self.stdx.subscribe().into(),
-		})
+		Ok(Process { err, ended, stdx: self.stdx.subscribe().into() })
 	}
 }
 
