@@ -1,0 +1,26 @@
+[package]
+name = "spuz_get"
+version = "0.1.0"
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+
+[dependencies]
+spuz_folder       = { workspace = true }
+spuz_piston       = { workspace = true, features = ["api"] }
+
+thiserror         = { workspace = true }
+serde             = { workspace = true }
+
+url               = { version = "2" }
+reqwest           = { version = "0.12", features = ["stream", "json"] }
+tokio             = { version = "1", features = ["fs", "rt-multi-thread", "macros"] }
+tokio-util        = { version = "0.7" }
+async-compression = { version = "0.4", features = ["futures-io", "lzma"] }
+futures           = { version = "0.3" }
+pin-project       = { version = "1" }
+
+[lints]
+workspace = true

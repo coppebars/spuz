@@ -1,0 +1,28 @@
+[package]
+name = "spuz_piston"
+version = "0.1.0"
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+description = "Description of a variety of minecraft json specifications"
+
+[dependencies]
+thiserror  = { workspace = true }
+serde      = { workspace = true }
+serde_json = { workspace = true }
+
+semver     = { version = "1" }
+url        = { version = "2", features = ["serde"] }
+cfg-if     = { version = "1" }
+reqwest    = { version = "0.12", features = ["json"], optional = true }
+
+tokio      = { version = "1.37.0", features = ["full"] }
+
+[lints]
+workspace = true
+
+[features]
+default = []
+api = ["reqwest"]
