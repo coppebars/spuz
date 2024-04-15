@@ -1,8 +1,9 @@
+use std::fmt::{Display, Formatter};
 use std::{
 	collections::HashMap,
 	path::PathBuf,
 	process::Stdio,
-	sync::{Arc, atomic::AtomicBool},
+	sync::{atomic::AtomicBool, Arc},
 };
 
 use bytes::BytesMut;
@@ -19,10 +20,11 @@ mod err;
 #[derive(Debug)]
 pub struct Jvm {
 	bin: PathBuf,
-	jargs: Vec<String>,
-	aargs: Vec<String>,
+	pub jargs: Vec<String>,
+	pub aargs: Vec<String>,
 	main_class: String,
 	vars: HashMap<String, String>,
+	agents: Vec<Agent>,
 
 	stdx: broadcast::Sender<String>,
 }
@@ -35,7 +37,18 @@ impl Jvm {
 			aargs: Vec::new(),
 			main_class: String::new(),
 			vars: HashMap::new(),
+			agents: Vec::new(),
 			stdx: broadcast::channel(64).0,
+		}
+	}
+
+	pub fn var(&mut self, ident: impl Into<String>, value: impl Into<String>) {
+		self.vars.insert(ident.into(), value.into());
+	}
+
+	pub fn var_opt(&mut self, ident: impl Into<String>, value: Option<impl Into<String>>) {
+		if let Some(value) = value {
+			self.var(ident, value);
 		}
 	}
 
@@ -44,6 +57,7 @@ impl Jvm {
 		let jargs = set_vars(self.jargs.clone(), &self.vars);
 		let aargs = set_vars(self.aargs.clone(), &self.vars);
 		cmd
+			.args(self.agents.iter().map(ToString::to_string))
 			.args(&jargs) // Jvm args
 			.arg(&self.main_class) // Main class
 			.args(&aargs) // App args (minecraft args)
@@ -122,8 +136,36 @@ impl Process {
 fn set_vars(mut args: Vec<String>, vars: &HashMap<String, String>) -> Vec<String> {
 	for s in &mut args {
 		for (key, value) in vars {
-			s.replace_range(.., &s.replace(key, value));
+			s.replace_range(.., &s.replace(&format!("${{{key}}}"), value));
 		}
 	}
 	args
+}
+
+#[derive(Debug)]
+pub struct Agent {
+	pub path: PathBuf,
+	pub options: Option<String>,
+}
+
+impl Agent {
+	pub fn new(path: impl Into<PathBuf>) -> Self {
+		let path = path.into();
+		Self { path, options: None }
+	}
+}
+
+impl Display for Agent {
+	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+		let Self { path, options } = self;
+		let path = path.to_str().ok_or(std::fmt::Error)?;
+
+		write!(f, "-javaagent:{path}")?;
+
+		if let Some(options) = options {
+			write!(f, "={options}")?;
+		}
+
+		Ok(())
+	}
 }

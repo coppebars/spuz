@@ -10,13 +10,15 @@ repository = "https://github.com/coppebars/spuz.git"
 readme = "readme.md"
 
 [workspace.dependencies]
-tracing      = { version = "0" }
-thiserror    = { version = "1" }
-serde        = { version = "1", features = ["derive"] }
-serde_json   = { version = "1" }
+tracing       = { version = "0" }
+thiserror     = { version = "1" }
+serde         = { version = "1", features = ["derive"] }
+serde_json    = { version = "1" }
 
-spuz_piston  = { path = "crates/spuz_piston" }
-spuz_folder  = { path = "crates/spuz_folder" }
+spuz_piston   = { path = "crates/spuz_piston" }
+spuz_folder   = { path = "crates/spuz_folder" }
+spuz_jvm      = { path = "crates/spuz_jvm" }
+spuz_launcher = { path = "crates/spuz_launcher" }
 
 [workspace.lint.rust]
 [workspace.lints.clippy]

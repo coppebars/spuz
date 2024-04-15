@@ -20,40 +20,22 @@ use crate::{Error, Result};
 pub const FILENAME: &str = "spzst.toml";
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Version {
+	pub name: Box<str>,
+	pub id: Box<str>,
+	pub version: Box<str>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct State {
 	pub integrity: HashMap<Box<Path>, Box<str>>,
-	pub fds: HashMap<Box<Path>, usize>,
+	pub versions: Vec<Version>,
 }
 
 #[allow(clippy::derivable_impls)]
 impl Default for State {
 	fn default() -> Self {
-		Self { integrity: HashMap::new(), fds: HashMap::new() }
-	}
-}
-
-impl State {
-	pub fn integrity_get_hash(&self, path: &Path) -> Option<&str> {
-		self.integrity.get(path).map(AsRef::as_ref)
-	}
-
-	pub fn integrity_insert_hash(&mut self, path: &Path, hash: &str) {
-		self.integrity.insert(path.into(), hash.into());
-	}
-
-	pub fn integrity_remove_hash(&mut self, path: &Path) {
-		self.integrity.remove(path);
-	}
-
-	pub fn fds_increase(&mut self, path: Box<Path>) {
-		let count = self.fds.entry(path).or_insert(0);
-		*count += 1;
-	}
-
-	pub fn fds_decrease(&mut self, path: &Path) {
-		if let Some(count) = self.fds.get_mut(path) {
-			*count = count.saturating_sub(1);
-		}
+		Self { integrity: HashMap::new(), versions: Vec::new() }
 	}
 }
 

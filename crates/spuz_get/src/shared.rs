@@ -22,6 +22,6 @@ macro_rules! loop_select_macro {
   };
 }
 
-pub use spawn_macro as spawn;
-pub use result_async_macro as result_async;
 pub use loop_select_macro as loop_select;
+pub use result_async_macro as result_async;
+pub use spawn_macro as spawn;

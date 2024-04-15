@@ -10,7 +10,7 @@ use serde::{
 	Deserialize, Deserializer, Serialize, Serializer,
 };
 
-use crate::{Arch, Os, Str};
+use crate::{Arch, Os};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Feature {
@@ -96,7 +96,7 @@ impl Serialize for FeatureSet {
 pub struct PlatformRequirement {
 	pub name: Option<Os>,
 	pub arch: Option<Arch>,
-	pub version: Option<Str>,
+	pub version: Option<String>,
 }
 
 impl PlatformRequirement {
@@ -180,10 +180,6 @@ impl RuleCompilance {
 	}
 
 	pub fn unpack<T>(&self, container: ConditionalValue<T>) -> Option<T> {
-		container
-			.rules
-			.iter()
-			.all(|rule| self.is_met(rule))
-			.then_some(container.value)
+		container.rules.iter().all(|rule| self.is_met(rule)).then_some(container.value)
 	}
 }

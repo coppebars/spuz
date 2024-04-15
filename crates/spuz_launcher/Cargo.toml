@@ -1,0 +1,18 @@
+[package]
+name = "spuz_launcher"
+version = "0.1.0"
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+
+[dependencies]
+spuz_piston   = { workspace = true }
+spuz_jvm      = { workspace = true }
+
+typed-builder = { version = "0" }
+itertools     = { version = "0.12" }
+
+[lints]
+workspace = true

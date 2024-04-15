@@ -5,13 +5,13 @@ use std::{
 
 use serde::{de::Visitor, Deserialize, Deserializer, Serialize, Serializer};
 
-use crate::{Size, Str, UrlStr};
+use crate::{Size, UrlStr};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PackageName {
 	pub package: PathBuf,
-	pub name: Str,
-	pub version: Str,
+	pub name: String,
+	pub version: String,
 }
 
 impl Display for PackageName {
@@ -51,10 +51,7 @@ impl<'de> Deserialize<'de> for PackageName {
 			type Value = PackageName;
 
 			fn expecting(&self, formatter: &mut Formatter) -> std::fmt::Result {
-				write!(
-					formatter,
-					"a string in java package format `org.name.pkg:artifact:version`"
-				)
+				write!(formatter, "a string in java package format `org.name.pkg:artifact:version`")
 			}
 
 			fn visit_str<E>(self, v: &str) -> Result<Self::Value, E>
@@ -63,11 +60,7 @@ impl<'de> Deserialize<'de> for PackageName {
 			{
 				let parts: Vec<&str> = v.split(':').collect();
 
-				Ok(PackageName {
-					package: parts[0].split('.').collect(),
-					name: parts[1].into(),
-					version: parts[2].into(),
-				})
+				Ok(PackageName { package: parts[0].split('.').collect(), name: parts[1].into(), version: parts[2].into() })
 			}
 
 			fn visit_string<E>(self, v: String) -> Result<Self::Value, E>
@@ -85,7 +78,7 @@ impl<'de> Deserialize<'de> for PackageName {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Artifact {
 	pub path: Box<Path>,
-	pub sha1: Str,
+	pub sha1: String,
 	pub size: Size,
 	pub url: UrlStr,
 }

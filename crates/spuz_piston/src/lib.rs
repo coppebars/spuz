@@ -1,5 +1,3 @@
-#[cfg(feature = "api")]
-pub mod api;
 pub mod assets;
 pub mod err;
 pub mod libs;
@@ -17,6 +15,6 @@ pub use platform::{Arch, Os, TARGET_ARCH, TARGET_OS};
 pub use rule::{
 	ConditionalValue, Feature, FeatureSet, PlatformRequirement, Rule, RuleAction, RuleCompilance, RuleCondition,
 };
-pub use shared::{Arr, ListOrValue, SemanticVersion, Size, Str, UrlStr, VersionId, VersionStability};
+pub use shared::{ListOrValue, SemanticVersion, Size, UrlStr, VersionId, VersionStability};
 
 // TODO: tests

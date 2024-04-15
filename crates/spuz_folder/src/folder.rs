@@ -1,24 +1,22 @@
 use std::{path::Path, sync::Arc};
 
-use crate::{statefile, CommonDirs, Result, Statefile};
+use tokio::fs::{canonicalize, create_dir_all};
+use tracing::info;
+
+use crate::Result;
 
 #[derive(Debug, Clone)]
 pub struct Folder {
 	pub root: Arc<Path>,
-	pub statefile: Statefile,
-	pub common_dirs: Arc<CommonDirs>,
 }
 
 impl Folder {
-	pub async fn settle(root: impl AsRef<Path>) -> Result<Self> {
-		let root: Arc<Path> = Arc::from(root.as_ref());
-		let statefile = Statefile::load(&root.join(statefile::FILENAME)).await?;
-		let common_dirs = Arc::new(CommonDirs::for_root(&root).await?);
+	pub async fn settle(root: impl AsRef<Path>) -> Result<Arc<Self>> {
+		let root = canonicalize(root.as_ref()).await?.into();
+		create_dir_all(&root).await?;
 
-		Ok(Self {
-			root,
-			statefile,
-			common_dirs,
-		})
+		info!("Spuz folder settled into {root:?}");
+
+		Ok(Self { root }.into())
 	}
 }
