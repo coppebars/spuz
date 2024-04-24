@@ -4,6 +4,7 @@ use hex::FromHexError;
 use thiserror::Error;
 use tokio::task::JoinError;
 use toml::{de::Error as TomlDe, ser::Error as TomlSer};
+use spuz_piston::Error as PistonError;
 
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
@@ -23,4 +24,7 @@ pub enum Error {
 
 	#[error(transparent)]
 	Join(#[from] JoinError),
+
+	#[error(transparent)]
+	Piston(#[from] PistonError),
 }

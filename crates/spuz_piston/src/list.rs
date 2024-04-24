@@ -1,22 +1,22 @@
-use crate::{Arr, Str, UrlStr, VersionId, VersionStability};
+use crate::{UrlStr, VersionId, VersionStability};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Latest {
-	pub release: VersionId<Str>,
-	pub snapshot: VersionId<Str>,
+	pub release: VersionId<String>,
+	pub snapshot: VersionId<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Version {
-	pub id: VersionId<Str>,
+	pub id: VersionId<String>,
 	pub r#type: VersionStability,
-	pub sha1: Str,
+	pub sha1: String,
 	pub url: UrlStr,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Versions {
 	latest: Latest,
-	versions: Arr<Version>,
+	versions: Vec<Version>,
 }

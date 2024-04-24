@@ -8,15 +8,19 @@ repository.workspace = true
 readme.workspace = true
 
 [dependencies]
-tracing   = { workspace = true }
-thiserror = { workspace = true }
-serde     = { workspace = true }
+spuz_piston  = { workspace = true }
 
-tokio     = { version = "1", features = ["fs", "io-util", "sync", "rt-multi-thread", "full"] }
-toml      = { version = "0.8" }
-sha1      = { version = "=0.11.0-pre.3" }
-blake3    = { version = "1" }
-hex       = { version = "0.4" }
-futures   = { version = "0" }
+tracing      = { workspace = true }
+thiserror    = { workspace = true }
+serde        = { workspace = true }
+
+tokio        = { version = "1", features = ["fs", "io-util", "sync", "rt-multi-thread", "full"] }
+tokio-stream = { version = "0.1" }
+toml         = { version = "0.8" }
+sha1         = { version = "=0.11.0-pre.3" }
+blake3       = { version = "1" }
+hex          = { version = "0.4" }
+reqwest      = { version = "0.12", features = ["json"] }
+
 [lints]
 workspace = true

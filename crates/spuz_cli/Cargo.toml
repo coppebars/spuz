@@ -1,0 +1,21 @@
+[package]
+name = "spuz_cli"
+version = "0.1.0"
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+readme.workspace = true
+
+[dependencies]
+spuz_folder        = { workspace = true }
+spuz_launcher      = { workspace = true }
+
+tracing            = { workspace = true }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+tokio              = { version = "1", features = ["full"] }
+anyhow             = { version = "1" }
+
+[lints]
+workspace = true

@@ -9,7 +9,6 @@ readme.workspace = true
 
 [dependencies]
 spuz_folder       = { workspace = true }
-spuz_piston       = { workspace = true, features = ["api"] }
 
 thiserror         = { workspace = true }
 serde             = { workspace = true }

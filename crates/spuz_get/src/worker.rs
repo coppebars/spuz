@@ -39,11 +39,7 @@ impl Worker {
 		let handle = Arc::new(JobHandle::new(rx));
 		let counter = Arc::new(AtomicUsize::new(job.total));
 
-		tx.send(Event::JobStarted {
-			bytes: job.size,
-			tasks: job.total,
-		})
-		.unwrap();
+		tx.send(Event::JobStarted { bytes: job.size, tasks: job.total }).unwrap();
 
 		for task in job.tasks {
 			let counter = counter.clone();
@@ -132,11 +128,7 @@ where
 	T: AsyncRead,
 {
 	pub fn new(reader: T, tx: &'a mpsc::UnboundedSender<Event>, total: u64) -> Self {
-		Self {
-			inner: BufReader::new(reader),
-			total,
-			tx,
-		}
+		Self { inner: BufReader::new(reader), total, tx }
 	}
 }
 
@@ -158,10 +150,7 @@ where
 		let this = self.project();
 		let result = this.inner.poll_fill_buf(cx);
 		if let Poll::Ready(Ok(result)) = &result {
-			let event = Event::TaskChunk {
-				total: *this.total,
-				size: result.len(),
-			};
+			let event = Event::TaskChunk { total: *this.total, size: result.len() };
 			this.tx.send(event).unwrap();
 		}
 		result

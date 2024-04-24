@@ -11,10 +11,6 @@ use crate::Result;
 
 /// Type representing the size of the resource in bytes
 pub type Size = u64;
-/// String type used for all definitions
-pub type Str = Box<str>;
-/// Array type used for all definitions
-pub type Arr<T> = Box<[T]>;
 
 /// Version stability is determined by whether a version is a release or a
 /// snapshot.
@@ -30,7 +26,7 @@ pub enum VersionStability {
 	Snapshot,
 	/// Unknown/Unsupported
 	#[serde(other)]
-	Unknown
+	Unknown,
 }
 
 impl VersionStability {
@@ -102,7 +98,7 @@ impl<T> Deref for VersionId<T> {
 /// This string is more than likely an [Url], but for memory and security
 /// reasons you should lazily parse this string into an [Url].
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-pub struct UrlStr(Str);
+pub struct UrlStr(String);
 
 impl Deref for UrlStr {
 	type Target = str;
@@ -130,7 +126,7 @@ impl UrlStr {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ListOrValue<T> {
-	List(Arr<T>),
+	List(Vec<T>),
 	Value(T),
 }
 

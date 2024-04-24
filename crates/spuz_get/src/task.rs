@@ -15,14 +15,7 @@ pub struct Task {
 
 impl Task {
 	pub fn new(url: Url, local: Arc<Path>, size: u64) -> Self {
-		Self {
-			url,
-			local,
-
-			size,
-			retries: 0,
-			lzma: false,
-		}
+		Self { url, local, size, retries: 0, lzma: false }
 	}
 
 	#[must_use]
@@ -30,7 +23,7 @@ impl Task {
 		self.lzma = enable;
 		self
 	}
-	
+
 	// TODO
 	#[allow(unused)]
 	pub(crate) fn retry_add(&mut self) {

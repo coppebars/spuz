@@ -48,7 +48,7 @@ impl JobHandle {
 
 #[derive(Debug, Default, Clone)]
 pub struct JobBuilder {
-	tasks: Vec<Task>
+	tasks: Vec<Task>,
 }
 
 impl JobBuilder {
