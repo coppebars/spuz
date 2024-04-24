@@ -2,7 +2,9 @@ use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{Artifact, ConditionalValue, ListOrValue, PackageName, Rule, Size, UrlStr, VersionId, VersionStability};
+use crate::{
+	Artifact, ConditionalValue, Error, ListOrValue, PackageName, Rule, Size, UrlStr, VersionId, VersionStability,
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -45,12 +47,13 @@ pub struct PistonPackage {
 	pub asset_index: AssetIndexResource,
 	pub arguments: Arguments,
 	pub libraries: Vec<Library>,
+	pub main_class: String,
 }
 
-impl FromStr for Box<PistonPackage> {
-	type Err = serde_json::error::Error;
+impl FromStr for PistonPackage {
+	type Err = Error;
 
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		serde_json::from_str(s)
+		serde_json::from_str(s).map_err(Into::into)
 	}
 }

@@ -2,6 +2,7 @@ use itertools::Itertools;
 use spuz_jvm::Jvm;
 use spuz_piston::{Argument, Feature, ListOrValue, PistonPackage, Rule, RuleCompilance};
 use std::collections::HashSet;
+use std::iter;
 use std::path::PathBuf;
 use typed_builder::TypedBuilder;
 
@@ -36,6 +37,7 @@ pub struct Launcher {
 	xuid: Option<String>,
 	resolution: Option<Resolution>,
 	natives_dir: PathBuf,
+	client_jar: PathBuf,
 	launcher_name: Option<String>,
 	launcher_version: Option<String>,
 	features: HashSet<Feature>,
@@ -45,12 +47,14 @@ impl Launcher {
 	pub fn compile(self) -> Jvm {
 		let mut jvm = Jvm::new(self.bin);
 
+		jvm.main_class = self.package.main_class;
 		jvm.var("version_name", self.package.id.to_string());
 		jvm.var("version_type", self.package.r#type.as_str());
 		jvm.var("assets_index_name", self.package.asset_index.id);
 		jvm.var("user_type", "msa");
 		jvm.var("game_directory", self.game_dir.to_string_lossy());
 		jvm.var("assets_root", self.assets_dir.to_string_lossy());
+		jvm.var("natives_directory", self.natives_dir.to_string_lossy());
 
 		jvm.var("auth_player_name", self.player_name);
 		jvm.var_opt("auth_uuid", self.uuid);
@@ -66,14 +70,20 @@ impl Launcher {
 		let check_rule = |rule| rule_compilance.is_met(&rule);
 
 		let classpath = self.package.libraries.into_iter().filter_map(|lib| {
+			let lib_path = self.libraries_dir.join(lib.downloads.artifact.path);
+
 			let lib_rule_filter = |rules: Vec<Rule>| {
 				let all_met = rules.into_iter().all(check_rule);
-				let lib_path = self.libraries_dir.join(lib.downloads.artifact.path);
-				all_met.then_some(lib_path)
+				all_met.then_some(lib_path.clone())
 			};
 
-			lib.rules.and_then(lib_rule_filter)
+			match lib.rules {
+				Some(rules) => lib_rule_filter(rules),
+				None => Some(lib_path)
+			}
 		});
+	
+		let classpath = classpath.chain(iter::once(self.client_jar));
 
 		let stringify_path = |it: PathBuf| it.to_string_lossy().into_owned();
 

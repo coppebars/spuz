@@ -22,7 +22,7 @@ pub struct Jvm {
 	bin: PathBuf,
 	pub jargs: Vec<String>,
 	pub aargs: Vec<String>,
-	main_class: String,
+	pub main_class: String,
 	vars: HashMap<String, String>,
 	agents: Vec<Agent>,
 
@@ -67,7 +67,9 @@ impl Jvm {
 	}
 
 	pub fn spawn(&self) -> Result<Process> {
-		let mut child = self.command().spawn()?;
+		let mut cmd = self.command();
+		println!("{cmd:#?}");
+		let mut child = cmd.spawn()?;
 		let mut stdout = child.stdout.take().expect("Everything is broken");
 		let mut stderr = child.stderr.take().expect("Everything is broken");
 
@@ -80,8 +82,8 @@ impl Jvm {
 			let stdx = self.stdx.clone();
 
 			async move {
-				let mut stdout_buf = BytesMut::with_capacity(1024);
-				let mut stderr_buf = BytesMut::with_capacity(1024);
+				let mut stdout_buf = vec![0u8; 1024];
+				let mut stderr_buf = vec![0u8; 1024];
 
 				macro_rules! stdx_send {
 					($stdx:ident, $ended:ident, $read:ident, $buf:ident) => {
@@ -105,10 +107,10 @@ impl Jvm {
 
 				loop {
 					tokio::select! {
-						read = stdout.read_buf(&mut stdout_buf) => {
+						read = stdout.read(&mut stdout_buf) => {
 							stdx_send!(stdx, ended, read, stdout_buf);
 						},
-						read = stderr.read_buf(&mut stderr_buf) => {
+						read = stderr.read(&mut stderr_buf) => {
 							stdx_send!(stdx, ended, read, stderr_buf);
 						}
 					}

@@ -20,7 +20,7 @@ spuz_folder   = { path = "crates/spuz_folder" }
 spuz_jvm      = { path = "crates/spuz_jvm" }
 spuz_launcher = { path = "crates/spuz_launcher" }
 
-[workspace.lint.rust]
+[workspace.lints.rust]
 [workspace.lints.clippy]
 pedantic = { level = "warn", priority = -1 }
 cargo = { level = "warn", priority = -1 }
