@@ -1,13 +1,15 @@
 use std::{path::Path, sync::Arc};
 
-pub use err::{Error, Result};
-use instances::Instances;
 use tokio::fs::{canonicalize, create_dir_all};
 use tracing::info;
-use versions::Versions;
+
+pub use crate::err::{Error, Result};
+use crate::{instances::Instances, jres::Jres, libraries::Libraries, versions::Versions};
 
 mod err;
 mod instances;
+mod jres;
+mod libraries;
 mod versions;
 
 #[derive(Debug)]
@@ -31,5 +33,13 @@ impl Folder {
 
 	pub fn instances(&self) -> Instances {
 		Instances::from_folder_root(&self.root)
+	}
+
+	pub fn libraries(&self) -> Libraries {
+		Libraries::from_folder_root(&self.root)
+	}
+
+	pub fn jres(&self) -> Jres {
+		Jres::from_folder_root(&self.root)
 	}
 }

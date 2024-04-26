@@ -4,7 +4,6 @@ use spuz_piston::PistonPackage;
 use tokio::{
 	fs::{try_exists, File},
 	io::AsyncReadExt,
-	sync::OnceCell,
 };
 
 use crate::Result;
@@ -21,42 +20,61 @@ impl Versions {
 	}
 
 	pub fn get(&self, id: &str) -> Version {
-		Version::new(&self.path, id)
+		Version::new(self.path.clone(), id)
 	}
 }
 
-type LazyManifest = OnceCell<Arc<PistonPackage>>;
+type LazyManifest = tokio::sync::OnceCell<Arc<PistonPackage>>;
+type LazyPath = std::cell::OnceCell<Arc<Path>>;
 
 #[derive(Debug)]
 pub struct Version {
 	pub id: String,
-	pub path: Arc<Path>,
-	pub manifest_path: Arc<Path>,
-	pub client_path: Arc<Path>,
-	pub natives_path: Arc<Path>,
+	versions_dir: Arc<Path>,
+	path: LazyPath,
+	manifest_path: LazyPath,
+	client_path: LazyPath,
+	natives_path: LazyPath,
 	manifest: LazyManifest,
 }
 
 impl Version {
-	pub(crate) fn new(versions_dir: &Path, id: &str) -> Self {
+	pub(crate) fn new(versions_dir: Arc<Path>, id: &str) -> Self {
 		Self {
 			id: id.into(),
-			path: versions_dir.join(id).into(),
-			manifest_path: versions_dir.join(id).join(format!("{id}.json")).into(),
-			client_path: versions_dir.join(id).join(format!("{id}.jar")).into(),
-			natives_path: versions_dir.join(id).join("natives").into(),
+			versions_dir,
+			path: LazyPath::new(),
+			manifest_path: LazyPath::new(),
+			client_path: LazyPath::new(),
+			natives_path: LazyPath::new(),
 			manifest: LazyManifest::new(),
 		}
 	}
 
+	pub fn path(&self) -> &Arc<Path> {
+		self.path.get_or_init(|| self.versions_dir.join(&self.id).into())
+	}
+
+	pub fn manifest_path(&self) -> &Arc<Path> {
+		self.manifest_path.get_or_init(|| self.path().join(format!("{}.json", self.id)).into())
+	}
+
+	pub fn client_path(&self) -> &Arc<Path> {
+		self.client_path.get_or_init(|| self.path().join(format!("{}.json", self.id)).into())
+	}
+
+	pub fn natives_path(&self) -> &Arc<Path> {
+		self.natives_path.get_or_init(|| self.path().join("natives").into())
+	}
+
 	pub async fn manifest(&self) -> Result<Option<Arc<PistonPackage>>> {
-		if try_exists(&self.path).await? {
+		if try_exists(self.path()).await? {
 			let initializer = || async move {
 				// Prevent redundant allocations
 				// Most manifestos are ~36Kb in size
 				const COMMON_SIZE: usize = 0x9000;
 
-				let mut file = File::open(&self.manifest_path).await?;
+				let mut file = File::open(self.manifest_path()).await?;
 				let mut content = String::with_capacity(COMMON_SIZE);
 				file.read_to_string(&mut content).await?;
 				let manifest = PistonPackage::from_str(&content)?;
@@ -69,5 +87,9 @@ impl Version {
 		} else {
 			Ok(None)
 		}
+	}
+
+	pub async fn exists(&self) -> Result<bool> {
+		try_exists(self.manifest_path()).await.map_err(Into::into)
 	}
 }

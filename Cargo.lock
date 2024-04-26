@@ -1154,6 +1154,7 @@ name = "spuz_folder"
 version = "0.1.0"
 dependencies = [
  "blake3",
+ "cfg-if",
  "hex",
  "reqwest",
  "serde",
