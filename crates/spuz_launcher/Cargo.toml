@@ -11,8 +11,11 @@ readme.workspace = true
 spuz_piston   = { workspace = true }
 spuz_jvm      = { workspace = true }
 
+tracing       = { workspace = true }
+
 typed-builder = { version = "0" }
 itertools     = { version = "0.12" }
+cfg-if        = { version = "1" }
 
 [lints]
 workspace = true

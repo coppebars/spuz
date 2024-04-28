@@ -1,173 +1,52 @@
-use std::fmt::{Display, Formatter};
-use std::{
-	collections::HashMap,
-	path::PathBuf,
-	process::Stdio,
-	sync::{atomic::AtomicBool, Arc},
-};
+use std::{fmt::Debug, path::PathBuf, process::Stdio};
 
-use bytes::BytesMut;
-use tokio::{
-	io::AsyncReadExt,
-	process::Command,
-	sync::{broadcast, Mutex, Notify},
-};
+use tokio::process::Command;
+use tracing::debug;
 
-pub use err::{Error, Result};
+pub use crate::{
+	err::{Error, Result},
+	layer::{LaunchMod, Layer},
+	process::LaunchCommand,
+};
 
 mod err;
+mod layer;
+mod process;
+#[cfg(feature = "useful-layers")]
+pub mod useful;
+pub mod compose;
 
-#[derive(Debug)]
-pub struct Jvm {
+#[derive(Debug, Default, Clone)]
+pub struct CommandBuilder {
 	bin: PathBuf,
-	pub jargs: Vec<String>,
-	pub aargs: Vec<String>,
-	pub main_class: String,
-	vars: HashMap<String, String>,
-	agents: Vec<Agent>,
-
-	stdx: broadcast::Sender<String>,
+	main_class: String,
+	java_args: Vec<String>,
+	app_args: Vec<String>,
 }
 
-impl Jvm {
-	pub fn new(bin: PathBuf) -> Self {
-		Self {
-			bin,
-			jargs: Vec::new(),
-			aargs: Vec::new(),
-			main_class: String::new(),
-			vars: HashMap::new(),
-			agents: Vec::new(),
-			stdx: broadcast::channel(64).0,
-		}
+impl CommandBuilder {
+	pub fn new(bin: impl Into<PathBuf>) -> Self {
+		Self { bin: bin.into(), ..Default::default() }
 	}
 
-	pub fn var(&mut self, ident: impl Into<String>, value: impl Into<String>) {
-		self.vars.insert(ident.into(), value.into());
+	pub fn apply(&mut self, layer: impl Layer + Debug) {
+		debug!(?layer, "Applying layer");
+		layer.apply(&mut LaunchMod {
+			java_args: &mut self.java_args,
+			app_args: &mut self.app_args,
+			main_class: &mut self.main_class,
+		});
 	}
 
-	pub fn var_opt(&mut self, ident: impl Into<String>, value: Option<impl Into<String>>) {
-		if let Some(value) = value {
-			self.var(ident, value);
-		}
-	}
-
-	fn command(&self) -> Command {
+	pub fn build(&self) -> LaunchCommand {
 		let mut cmd = Command::new(&self.bin);
-		let jargs = set_vars(self.jargs.clone(), &self.vars);
-		let aargs = set_vars(self.aargs.clone(), &self.vars);
 		cmd
-			.args(self.agents.iter().map(ToString::to_string))
-			.args(&jargs) // Jvm args
+			.args(&self.java_args) // Jvm args
 			.arg(&self.main_class) // Main class
-			.args(&aargs) // App args (minecraft args)
+			.args(&self.app_args) // App args (minecraft args)
 			.stdout(Stdio::piped()) // Pipe stdout
 			.stderr(Stdio::piped()); // Pipe stderr
-		cmd
-	}
-
-	pub fn spawn(&self) -> Result<Process> {
-		let mut cmd = self.command();
-		println!("{cmd:#?}");
-		let mut child = cmd.spawn()?;
-		let mut stdout = child.stdout.take().expect("Everything is broken");
-		let mut stderr = child.stderr.take().expect("Everything is broken");
-
-		let err = Arc::new(AtomicBool::new(false));
-		let ended = Arc::new(Notify::new());
-
-		tokio::spawn({
-			let err = Arc::clone(&err);
-			let ended = Arc::clone(&ended);
-			let stdx = self.stdx.clone();
-
-			async move {
-				let mut stdout_buf = vec![0u8; 1024];
-				let mut stderr_buf = vec![0u8; 1024];
-
-				macro_rules! stdx_send {
-					($stdx:ident, $ended:ident, $read:ident, $buf:ident) => {
-						if let Ok(read) = $read {
-							if read == 0 {
-								$ended.notify_one();
-								break;
-							}
-
-							let bytes = &$buf[..read];
-							let Ok(str) = ::std::str::from_utf8(bytes) else { unreachable!() };
-							if $stdx.send(str.to_owned()).is_err() {
-								$ended.notify_one();
-								break;
-							}
-						} else {
-							err.store(true, ::std::sync::atomic::Ordering::Relaxed);
-						}
-					};
-				}
-
-				loop {
-					tokio::select! {
-						read = stdout.read(&mut stdout_buf) => {
-							stdx_send!(stdx, ended, read, stdout_buf);
-						},
-						read = stderr.read(&mut stderr_buf) => {
-							stdx_send!(stdx, ended, read, stderr_buf);
-						}
-					}
-				}
-			}
-		});
-
-		Ok(Process { err, ended, stdx: self.stdx.subscribe().into() })
-	}
-}
-
-#[derive(Debug)]
-pub struct Process {
-	err: Arc<AtomicBool>,
-	ended: Arc<Notify>,
-	stdx: Mutex<broadcast::Receiver<String>>,
-}
-
-impl Process {
-	pub async fn recv(&self) -> Option<String> {
-		self.stdx.lock().await.recv().await.ok()
-	}
-}
-
-fn set_vars(mut args: Vec<String>, vars: &HashMap<String, String>) -> Vec<String> {
-	for s in &mut args {
-		for (key, value) in vars {
-			s.replace_range(.., &s.replace(&format!("${{{key}}}"), value));
-		}
-	}
-	args
-}
-
-#[derive(Debug)]
-pub struct Agent {
-	pub path: PathBuf,
-	pub options: Option<String>,
-}
-
-impl Agent {
-	pub fn new(path: impl Into<PathBuf>) -> Self {
-		let path = path.into();
-		Self { path, options: None }
-	}
-}
-
-impl Display for Agent {
-	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-		let Self { path, options } = self;
-		let path = path.to_str().ok_or(std::fmt::Error)?;
-
-		write!(f, "-javaagent:{path}")?;
-
-		if let Some(options) = options {
-			write!(f, "={options}")?;
-		}
-
-		Ok(())
+		debug!(?cmd, "Command built");
+		LaunchCommand::new(cmd)
 	}
 }

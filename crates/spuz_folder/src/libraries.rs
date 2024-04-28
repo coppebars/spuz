@@ -9,7 +9,7 @@ use crate::Result;
 
 #[derive(Debug)]
 pub struct Libraries {
-	path: Arc<Path>,
+	pub path: Arc<Path>,
 }
 
 impl Libraries {

@@ -1143,7 +1143,9 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "spuz_folder",
+ "spuz_jvm",
  "spuz_launcher",
+ "spuz_piston",
  "tokio",
  "tracing",
  "tracing-subscriber",
@@ -1190,15 +1192,18 @@ dependencies = [
  "bytes",
  "thiserror",
  "tokio",
+ "tracing",
 ]
 
 [[package]]
 name = "spuz_launcher"
 version = "0.1.0"
 dependencies = [
+ "cfg-if",
  "itertools",
  "spuz_jvm",
  "spuz_piston",
+ "tracing",
  "typed-builder",
 ]
 
