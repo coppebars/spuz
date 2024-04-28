@@ -11,13 +11,11 @@ readme.workspace = true
 thiserror   = { workspace = true }
 tracing     = { workspace = true }
 
-bytes       = { version = "1" }
 tokio       = { version = "1", features = ["sync", "io-util", "process", "rt-multi-thread", "macros"] }
 
 [lints]
 workspace = true
 
 [features]
-default = ['useful-layers', 'process-handle']
 useful-layers = []
 process-handle = []

@@ -13,7 +13,6 @@ spuz_spawner  = { workspace = true }
 
 tracing       = { workspace = true }
 
-typed-builder = { version = "0" }
 itertools     = { version = "0.12" }
 cfg-if        = { version = "1" }
 
