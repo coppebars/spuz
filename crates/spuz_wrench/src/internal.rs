@@ -2,7 +2,7 @@ use std::path::Path;
 
 use cfg_if::cfg_if;
 use itertools::Itertools;
-use spuz_jvm::{LaunchMod, Layer};
+use spuz_spawner::{LaunchMod, Layer};
 use tracing::debug;
 
 cfg_if! {

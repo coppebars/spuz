@@ -1,14 +1,13 @@
-use std::{collections::HashSet, iter, ops::Deref, path::Path, sync::Arc};
-
-use spuz_jvm::{LaunchMod, Layer};
-use spuz_piston::{Argument, Feature, ListOrValue, PistonManifest, Rule, RuleCompilance};
-
-use crate::internal::{AssersDir, Classpath, GameDir, NativesDir, VersionInfo};
-
 mod internal;
 mod opts;
 
-pub use crate::opts::{LauncherInfo, Player, WindowSize, Fullscreen};
+use std::{collections::HashSet, iter, ops::Deref, path::Path, sync::Arc};
+
+use spuz_spawner::{LaunchMod, Layer};
+use spuz_piston::{Argument, Feature, ListOrValue, PistonManifest, Rule, RuleCompilance};
+
+use crate::internal::{AssersDir, Classpath, GameDir, NativesDir, VersionInfo};
+pub use crate::opts::{Fullscreen, LauncherInfo, Player, WindowSize};
 
 #[derive(Debug)]
 pub struct LauncherWrench {
@@ -55,9 +54,9 @@ impl Layer for LauncherWrench {
 		let layers = (
 			Classpath(classpath),
 			VersionInfo {
-				id: &self.manifest.id,
-				version_type: self.manifest.r#type.as_str(),
-				asset_index_id: &self.manifest.asset_index.id,
+				id: self.manifest.version.id(),
+				version_type: self.manifest.version.version_type(),
+				asset_index_id: &self.manifest.assets,
 			},
 			AssersDir(&self.assets_dir),
 			NativesDir(&self.natives_dir),

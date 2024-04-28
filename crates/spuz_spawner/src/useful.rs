@@ -29,7 +29,7 @@ where
 	Value: Display,
 {
 	fn apply(self, launch_mod: &mut LaunchMod) {
-		let Self (name, value) = self;
+		let Self(name, value) = self;
 		let arg = format!("-D{name}={value}");
 		debug!(?arg, "D-parameter with name: `{name}` set to value: `{value}`");
 		launch_mod.java_args.push(arg);

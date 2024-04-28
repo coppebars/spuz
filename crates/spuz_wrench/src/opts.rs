@@ -1,4 +1,4 @@
-use spuz_jvm::{LaunchMod, Layer};
+use spuz_spawner::{LaunchMod, Layer};
 use tracing::debug;
 
 #[derive(Debug, Clone, Default)]

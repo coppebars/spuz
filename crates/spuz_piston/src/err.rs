@@ -1,6 +1,6 @@
+use serde_json::Error as JsonError;
 use thiserror::Error;
 use url::ParseError as UrlParseError;
-use serde_json::Error as JsonError;
 
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
@@ -10,5 +10,5 @@ pub enum Error {
 	UrlParse(#[from] UrlParseError),
 
 	#[error(transparent)]
-	Json(#[from] JsonError)
+	Json(#[from] JsonError),
 }

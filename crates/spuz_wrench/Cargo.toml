@@ -1,5 +1,5 @@
 [package]
-name = "spuz_launcher"
+name = "spuz_wrench"
 version = "0.1.0"
 edition.workspace = true
 authors.workspace = true
@@ -9,11 +9,10 @@ readme.workspace = true
 
 [dependencies]
 spuz_piston   = { workspace = true }
-spuz_jvm      = { workspace = true }
+spuz_spawner  = { workspace = true }
 
 tracing       = { workspace = true }
 
-typed-builder = { version = "0" }
 itertools     = { version = "0.12" }
 cfg-if        = { version = "1" }
 

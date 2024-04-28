@@ -17,8 +17,8 @@ serde_json    = { version = "1" }
 
 spuz_piston   = { path = "crates/spuz_piston" }
 spuz_folder   = { path = "crates/spuz_folder" }
-spuz_jvm      = { path = "crates/spuz_jvm" }
-spuz_launcher = { path = "crates/spuz_launcher" }
+spuz_spawner  = { path = "crates/spuz_spawner" }
+spuz_wrench   = { path = "crates/spuz_wrench" }
 
 [workspace.lints.rust]
 [workspace.lints.clippy]

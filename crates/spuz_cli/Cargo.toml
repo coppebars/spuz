@@ -9,9 +9,9 @@ readme.workspace = true
 
 [dependencies]
 spuz_folder        = { workspace = true }
-spuz_launcher      = { workspace = true }
+spuz_wrench        = { workspace = true }
 spuz_piston        = { workspace = true }
-spuz_jvm           = { workspace = true, features = ["useful-layers"] }
+spuz_spawner       = { workspace = true, features = ["useful-layers", "process-handle"] }
 
 tracing            = { workspace = true }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }

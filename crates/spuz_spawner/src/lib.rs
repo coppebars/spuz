@@ -9,12 +9,12 @@ pub use crate::{
 	process::LaunchCommand,
 };
 
+pub mod compose;
 mod err;
 mod layer;
 mod process;
 #[cfg(feature = "useful-layers")]
 pub mod useful;
-pub mod compose;
 
 #[derive(Debug, Default, Clone)]
 pub struct CommandBuilder {
