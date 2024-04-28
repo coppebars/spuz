@@ -17,7 +17,7 @@ where
 
 pub(crate) fn setup() {
 	let tracing_fmt = new();
-	let directive = LevelFilter::INFO.into();
+	let directive = LevelFilter::TRACE.into();
 	let tracing_env = EnvFilter::builder().with_default_directive(directive).from_env_lossy();
 	let tracing_registry = trsb::registry().with(tracing_fmt).with(tracing_env);
 

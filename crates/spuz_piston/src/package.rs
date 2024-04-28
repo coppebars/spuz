@@ -41,7 +41,7 @@ pub struct AssetIndexResource {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct PistonPackage {
+pub struct PistonManifest {
 	pub r#type: VersionStability,
 	pub id: VersionId<String>,
 	pub asset_index: AssetIndexResource,
@@ -50,7 +50,7 @@ pub struct PistonPackage {
 	pub main_class: String,
 }
 
-impl FromStr for PistonPackage {
+impl FromStr for PistonManifest {
 	type Err = Error;
 
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
