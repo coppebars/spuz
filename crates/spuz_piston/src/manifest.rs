@@ -2,9 +2,7 @@ use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 
-use crate::{
-	Artifact, ConditionalValue, Error, ListOrValue, PackageName, Rule, Size, UrlStr, VersionId, VersionStability,
-};
+use crate::{Artifact, ConditionalValue, Error, ListOrValue, PackageName, Rule, Size, UrlStr, Version};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(untagged)]
@@ -42,11 +40,18 @@ pub struct AssetIndexResource {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct PistonManifest {
-	pub r#type: VersionStability,
-	pub id: VersionId<String>,
+	/// Version info: id and stability
+	#[serde(flatten)]
+	pub version: Version,
+	/// Asset index id
+	pub assets: String,
+	/// Reference to assets manifest
 	pub asset_index: AssetIndexResource,
+	/// Required or optional command-line arguments to configure game and player
 	pub arguments: Arguments,
+	/// Java libraries that minecraft uses
 	pub libraries: Vec<Library>,
+	/// Main class contains main method to start the game
 	pub main_class: String,
 }
 

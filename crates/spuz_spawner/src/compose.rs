@@ -1,4 +1,4 @@
-use crate::{Layer, LaunchMod};
+use crate::{LaunchMod, Layer};
 
 macro_rules! impl_compose {
   ($($ty:ident),*) => {

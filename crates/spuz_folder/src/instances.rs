@@ -1,9 +1,8 @@
-use std::path::Path;
-use std::sync::Arc;
+use std::{path::Path, sync::Arc};
 
 #[derive(Debug)]
 pub struct Instances {
-	path: Arc<Path>
+	path: Arc<Path>,
 }
 
 impl Instances {

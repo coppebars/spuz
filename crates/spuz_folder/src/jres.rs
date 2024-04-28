@@ -1,6 +1,6 @@
 use std::{path::Path, sync::Arc};
-use cfg_if::cfg_if;
 
+use cfg_if::cfg_if;
 use tokio::fs::try_exists;
 
 use crate::Result;
@@ -38,8 +38,8 @@ impl JavaRuntime {
 	pub fn bin(&self) -> &Arc<Path> {
 		self.bin.get_or_init(|| {
 			let component_dir = self.jres_dir.join(&self.component);
-			
-		  cfg_if! {
+
+			cfg_if! {
 				if #[cfg(target_os = "windows")] {
 					let ext = ".exe";
 				} else {

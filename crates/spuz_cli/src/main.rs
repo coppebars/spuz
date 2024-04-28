@@ -2,8 +2,8 @@ use std::{collections::HashSet, ops::Deref, path::PathBuf};
 
 use anyhow::Result;
 use spuz_folder::Folder;
-use spuz_jvm::{useful::AllocRange, CommandBuilder};
-use spuz_launcher::{Fullscreen, LauncherWrench, Player, WindowSize};
+use spuz_spawner::{useful::AllocRange, CommandBuilder};
+use spuz_wrench::{LauncherWrench, Player, WindowSize};
 use spuz_piston::Feature;
 
 mod telemetry;

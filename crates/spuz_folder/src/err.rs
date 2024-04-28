@@ -1,10 +1,10 @@
 use std::io::Error as IoError;
 
 use hex::FromHexError;
+use spuz_piston::Error as PistonError;
 use thiserror::Error;
 use tokio::task::JoinError;
 use toml::{de::Error as TomlDe, ser::Error as TomlSer};
-use spuz_piston::Error as PistonError;
 
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 

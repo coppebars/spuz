@@ -1,5 +1,4 @@
-use std::path::Path;
-use std::sync::Arc;
+use std::{path::Path, sync::Arc};
 
 use tokio::sync::{mpsc, Mutex, OwnedMutexGuard};
 use tokio_util::sync::CancellationToken;
