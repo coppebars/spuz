@@ -33,7 +33,7 @@ jobs:
       - run: cargo fmt --all -- --check
 
   clippy:
-    name: '💯 Clippy'
+    name: '⚠️ Clippy'
     strategy:
       fail-fast: false
       matrix:
@@ -48,5 +48,4 @@ jobs:
           components: clippy
         if: matrix.platform == 'ubuntu-latest'
       - uses: Swatinem/rust-cache@v2
-      - run: mkdir app/dist
       - run: cargo clippy --all-targets --all-features -- -D warnings
