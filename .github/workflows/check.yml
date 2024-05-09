@@ -46,7 +46,6 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy
-      - name: install webkit2gtk
         if: matrix.platform == 'ubuntu-latest'
       - uses: Swatinem/rust-cache@v2
       - run: mkdir app/dist
