@@ -19,7 +19,6 @@ spuz_piston   = { path = "crates/spuz_piston" }
 spuz_folder   = { path = "crates/spuz_folder" }
 spuz_spawner  = { path = "crates/spuz_spawner" }
 spuz_wrench   = { path = "crates/spuz_wrench" }
-spuz_get      = { path = "crates/spuz_get" }
 
 [workspace.lints.rust]
 [workspace.lints.clippy]

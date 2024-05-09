@@ -11,7 +11,6 @@ readme.workspace = true
 spuz_folder        = { workspace = true }
 spuz_wrench        = { workspace = true }
 spuz_piston        = { workspace = true }
-spuz_get           = { workspace = true }
 spuz_spawner       = { workspace = true, features = ["useful-layers", "process-handle"] }
 
 tracing            = { workspace = true }

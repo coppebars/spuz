@@ -1267,7 +1267,6 @@ dependencies = [
  "anyhow",
  "smol",
  "spuz_folder",
- "spuz_get",
  "spuz_piston",
  "spuz_spawner",
  "spuz_wrench",
@@ -1303,22 +1302,6 @@ dependencies = [
  "tokio-util",
  "tracing",
  "typed-builder",
-]
-
-[[package]]
-name = "spuz_get_old"
-version = "0.1.0"
-dependencies = [
- "async-compression",
- "futures",
- "pin-project",
- "reqwest",
- "serde",
- "spuz_folder",
- "thiserror",
- "tokio",
- "tokio-util",
- "url",
 ]
 
 [[package]]
