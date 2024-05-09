@@ -1,5 +1,4 @@
-use std::{path::PathBuf};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use anyhow::Result;
 use spuz_folder::Folder;
@@ -23,11 +22,7 @@ async fn main() -> Result<()> {
 	let mut builder = CommandBuilder::new("java");
 	builder.apply(AllocRange(1024..4096));
 
-	let wrench = LauncherWrench::builder()
-		.manifest(&manifest)
-		.current_dir(&root)
-		.game_dir(&game_dir)
-		.build();
+	let wrench = LauncherWrench::builder().manifest(&manifest).current_dir(&root).game_dir(&game_dir).build();
 
 	builder.apply(wrench);
 	builder.apply(Player::new("LIMPIX31", "268903ca-7946-400a-8984-1fdc0b8baf71"));

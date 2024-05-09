@@ -3,10 +3,10 @@ mod mandep;
 mod opts;
 
 use std::{collections::HashSet, path::Path};
-use typed_builder::TypedBuilder;
 
 use spuz_piston::{Feature, Manifest, RuleCompilance};
 use spuz_spawner::{LaunchMod, Layer};
+use typed_builder::TypedBuilder;
 
 pub use crate::opts::{Fullscreen, LauncherInfo, Player, WindowSize};
 use crate::{

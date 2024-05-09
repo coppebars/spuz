@@ -1,4 +1,4 @@
-name: "💯 Checks"
+name: "💯 Check"
 
 on:
   push:
@@ -12,7 +12,7 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/clippy.yml"
+      - ".github/workflows/check.yml"
       - "**/*.rs"
       - "**/Cargo.toml"
 
@@ -22,6 +22,7 @@ concurrency:
 
 jobs:
   fmt:
+    name: '🧾 Fmt'
     runs-on: ubuntu-latest
 
     steps:
@@ -32,6 +33,7 @@ jobs:
       - run: cargo fmt --all -- --check
 
   clippy:
+    name: '💯 Clippy'
     strategy:
       fail-fast: false
       matrix:
