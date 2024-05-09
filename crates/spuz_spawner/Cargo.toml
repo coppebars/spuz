@@ -8,10 +8,11 @@ repository.workspace = true
 readme.workspace = true
 
 [dependencies]
-thiserror   = { workspace = true }
-tracing     = { workspace = true }
+thiserror     = { workspace = true }
+tracing       = { workspace = true }
 
-tokio       = { version = "1", features = ["sync", "io-util", "process", "rt-multi-thread", "macros"] }
+tokio         = { version = "1", features = ["sync", "io-util", "process", "rt-multi-thread", "macros"] }
+async-channel = { version = "2" }
 
 [lints]
 workspace = true

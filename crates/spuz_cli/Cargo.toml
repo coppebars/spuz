@@ -14,8 +14,9 @@ spuz_piston        = { workspace = true }
 spuz_spawner       = { workspace = true, features = ["useful-layers", "process-handle"] }
 
 tracing            = { workspace = true }
-tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+smol               = { version = "2" }
 tokio              = { version = "1", features = ["full"] }
 anyhow             = { version = "1" }
 

@@ -9,11 +9,9 @@ readme.workspace = true
 description = "1"
 
 [dependencies]
-thiserror  = { workspace = true }
 serde      = { workspace = true }
 serde_json = { workspace = true }
 
-url        = { version = "2", features = ["serde"] }
 cfg-if     = { version = "1" }
 
 [lints]

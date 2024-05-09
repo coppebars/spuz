@@ -2,15 +2,15 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::Size;
+use crate::{Size, Str};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct AssetObject {
-	pub hash: String,
+	pub hash: Str,
 	pub size: Size,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct AssetIndex {
-	pub objects: HashMap<String, AssetObject>,
+	pub objects: HashMap<Str, AssetObject>,
 }
