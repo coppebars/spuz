@@ -10,7 +10,7 @@ use serde::{
 	Deserialize, Deserializer, Serialize, Serializer,
 };
 
-use crate::{Arch, Os};
+use crate::{Arch, Arr, Os, Str};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Feature {
@@ -30,7 +30,7 @@ pub enum Feature {
 	Unknown,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct FeatureSet(HashSet<Feature>);
 
 impl Deref for FeatureSet {
@@ -92,11 +92,11 @@ impl Serialize for FeatureSet {
 	}
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct PlatformRequirement {
 	pub name: Option<Os>,
 	pub arch: Option<Arch>,
-	pub version: Option<String>,
+	pub version: Option<Str>,
 }
 
 impl PlatformRequirement {
@@ -119,7 +119,7 @@ impl PlatformRequirement {
 	}
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Rule {
 	pub action: RuleAction,
 	#[serde(flatten)]
@@ -143,7 +143,7 @@ impl RuleAction {
 	}
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum RuleCondition {
 	#[serde(rename = "os")]
@@ -151,9 +151,9 @@ pub enum RuleCondition {
 	Features(FeatureSet),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct ConditionalValue<T> {
-	pub rules: Vec<Rule>,
+	pub rules: Arr<Rule>,
 	pub value: T,
 }
 
@@ -181,5 +181,9 @@ impl RuleCompilance {
 
 	pub fn unpack<T>(&self, container: ConditionalValue<T>) -> Option<T> {
 		container.rules.iter().all(|rule| self.is_met(rule)).then_some(container.value)
+	}
+
+	pub fn unpack_ref<'a, T>(&self, container: &'a ConditionalValue<T>) -> Option<&'a T> {
+		container.rules.iter().all(|rule| self.is_met(rule)).then_some(&container.value)
 	}
 }

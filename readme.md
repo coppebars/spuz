@@ -11,7 +11,8 @@
     - [x] Version manifest `1.19+`
     - [x] Asset index
     - [x] Listing
-    - [ ] Support for older versions `1.16+`
+    - [x] Support for older versions `1.12+`
+    - [x] Launcher profile
 - `spuz_spawner` - Helpers for spawning java runtime
     - [x] Spawning java
     - [x] Easy way to apply argument changes
@@ -19,7 +20,8 @@
 - `spuz_wrench` - Layers for `spuz_spawner` to configure java runtime command to launch game from version manifest
     - [x] Support variables `1.16+`
     - [x] Conditional arguments and libraries (depending on target os and arch) `1.19+`
-    - [ ] Support for older versions `1.16+`
+    - [x] Support for older versions `1.12+`
+    - [x] Friendly and typed builder
 - `spuz_get` - Concurrent file downloader. Will download minecraft for you.
     - [x] Download files concurrently
     - [x] Progress tracking
@@ -44,15 +46,11 @@ async fn main() -> Result<()> {
   builder.apply(AllocRange(1024..4096));
 
   // Setup launcher wrench
-  let wrench = LauncherWrench {
-    manifest: manifest.deref().clone(),
-    libraries_dir: root.join("libraries").into(),
-    assets_dir: root.join("assets").into(),
-    natives_dir: client_dir.join("natives").into(),
-    client_jar: client_dir.join(format!("1.20.4.jar")).into(),
-    game_dir: root.join("instances").join("test").into(),
-    features: HashSet::from([Feature::CustomResolution]),
-  };
+  let wrench = LauncherWrench::builder()
+    .manifest(&manifest)
+    .current_dir(&root)
+    .game_dir(&game_dir)
+    .build();
 
   // Apply wrench
   builder.apply(wrench);
@@ -64,10 +62,10 @@ async fn main() -> Result<()> {
   // builder.apply(Fullscreen);
 
   // Build and spawn process
-  let mut process = builder.build().spawn()?;
+  let process = builder.build().spawn()?;
 
   // Watch for logs
-  while let Some(log) = process.logs.recv().await {
+  while let Ok(log) = process.logs.recv().await {
     print!("{log}");
   }
 

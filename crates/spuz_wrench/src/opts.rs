@@ -78,8 +78,8 @@ impl Layer for WindowSize {
 		for arg in &mut *launch_mod.app_args {
 			*arg = arg.replace("${resolution_width}", &width);
 			*arg = arg.replace("${resolution_height}", &height);
-			debug!("Window size set to {width}x{height}");
 		}
+		debug!("Window size set to {width}x{height}");
 	}
 }
 

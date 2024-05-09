@@ -14,6 +14,7 @@ spuz_spawner  = { workspace = true }
 tracing       = { workspace = true }
 
 itertools     = { version = "0.12" }
+typed-builder = { version = "0.18" }
 cfg-if        = { version = "1" }
 
 [lints]

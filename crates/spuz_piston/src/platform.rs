@@ -1,7 +1,7 @@
 use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Os {
 	Linux,
@@ -25,9 +25,23 @@ impl Os {
 	pub fn is_target(self) -> bool {
 		self == TARGET_OS
 	}
+
+	pub fn into_classifier(self) -> NativeClassifier {
+		match self {
+			Os::Linux => NativeClassifier::Linux,
+			Os::Windows => NativeClassifier::Windows,
+			Os::Osx => NativeClassifier::Macos,
+		}
+	}
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
+impl From<Os> for NativeClassifier {
+	fn from(value: Os) -> Self {
+		value.into_classifier()
+	}
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum Arch {
 	X64,
@@ -47,5 +61,35 @@ cfg_if! {
 impl Arch {
 	pub fn is_target(self) -> bool {
 		self == TARGET_ARCH
+	}
+}
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
+pub enum NativeClassifier {
+	#[serde(rename = "natives-linux")]
+	Linux,
+	#[serde(rename = "natives-windows")]
+	Windows,
+	#[serde(rename = "natives-macos")]
+	Macos,
+}
+
+impl NativeClassifier {
+	pub fn into_os(self) -> Os {
+		match self {
+			NativeClassifier::Linux => Os::Linux,
+			NativeClassifier::Windows => Os::Windows,
+			NativeClassifier::Macos => Os::Osx,
+		}
+	}
+
+	pub fn is_target(self) -> bool {
+		self.into_os().is_target()
+	}
+}
+
+impl From<NativeClassifier> for Os {
+	fn from(value: NativeClassifier) -> Self {
+		value.into_os()
 	}
 }

@@ -13,6 +13,7 @@ spuz_piston  = { workspace = true }
 tracing      = { workspace = true }
 thiserror    = { workspace = true }
 serde        = { workspace = true }
+serde_json   = { workspace = true }
 
 tokio        = { version = "1", features = ["fs", "io-util", "sync", "rt-multi-thread"] }
 cfg-if       = { version = "1" }

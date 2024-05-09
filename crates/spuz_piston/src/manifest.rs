@@ -1,64 +1,36 @@
-use std::str::FromStr;
+use std::{fmt::Debug, ops::Deref, str::FromStr};
 
-use serde::{Deserialize, Serialize};
+use crate::v::AnyManifest;
 
-use crate::{Artifact, ConditionalValue, Error, ListOrValue, PackageName, Rule, Size, UrlStr, Version};
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(untagged)]
-pub enum Argument {
-	Plain(String),
-	Conditional(ConditionalValue<ListOrValue<String>>),
+#[derive(Debug, Clone)]
+pub struct Manifest {
+	raw: AnyManifest,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Arguments {
-	pub game: Vec<Argument>,
-	pub jvm: Vec<Argument>,
+impl Manifest {
+	fn new(raw: AnyManifest) -> Self {
+		Self { raw }
+	}
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct LibrarySpecifiers {
-	pub artifact: Artifact,
+impl Deref for Manifest {
+	type Target = AnyManifest;
+
+	fn deref(&self) -> &Self::Target {
+		&self.raw
+	}
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Library {
-	pub name: PackageName,
-	pub downloads: LibrarySpecifiers,
-	pub rules: Option<Vec<Rule>>,
+impl AsRef<AnyManifest> for Manifest {
+	fn as_ref(&self) -> &AnyManifest {
+		&self.raw
+	}
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct AssetIndexResource {
-	pub id: String,
-	pub url: UrlStr,
-	pub total_size: Size,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct PistonManifest {
-	/// Version info: id and stability
-	#[serde(flatten)]
-	pub version: Version,
-	/// Asset index id
-	pub assets: String,
-	/// Reference to assets manifest
-	pub asset_index: AssetIndexResource,
-	/// Required or optional command-line arguments to configure game and player
-	pub arguments: Arguments,
-	/// Java libraries that minecraft uses
-	pub libraries: Vec<Library>,
-	/// Main class contains main method to start the game
-	pub main_class: String,
-}
-
-impl FromStr for PistonManifest {
-	type Err = Error;
+impl FromStr for Manifest {
+	type Err = serde_json::Error;
 
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		serde_json::from_str(s).map_err(Into::into)
+		Ok(Self::new(s.parse()?))
 	}
 }

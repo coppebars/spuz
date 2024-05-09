@@ -1,6 +1,6 @@
-use std::{path::Path, str::FromStr, sync::Arc};
+use std::{path::Path, sync::Arc};
 
-use spuz_piston::PistonManifest;
+use spuz_piston::Manifest;
 use tokio::{
 	fs::{try_exists, File},
 	io::AsyncReadExt,
@@ -24,7 +24,7 @@ impl Versions {
 	}
 }
 
-type LazyManifest = tokio::sync::OnceCell<Arc<PistonManifest>>;
+type LazyManifest = tokio::sync::OnceCell<Arc<Manifest>>;
 type LazyPath = std::cell::OnceCell<Arc<Path>>;
 
 #[derive(Debug)]
@@ -67,7 +67,7 @@ impl Version {
 		self.natives_path.get_or_init(|| self.path().join("natives").into())
 	}
 
-	pub async fn manifest(&self) -> Result<Option<Arc<PistonManifest>>> {
+	pub async fn manifest(&self) -> Result<Option<Arc<Manifest>>> {
 		if try_exists(self.path()).await? {
 			let initializer = || async move {
 				// Prevent redundant allocations
@@ -77,7 +77,7 @@ impl Version {
 				let mut file = File::open(self.manifest_path()).await?;
 				let mut content = String::with_capacity(COMMON_SIZE);
 				file.read_to_string(&mut content).await?;
-				let manifest = PistonManifest::from_str(&content)?;
+				let manifest = content.parse()?;
 				Result::<_, crate::Error>::Ok(Arc::new(manifest))
 			};
 
