@@ -3,7 +3,6 @@ mod mandep;
 mod opts;
 
 use std::{collections::HashSet, path::Path};
-use std::ops::Deref;
 
 use spuz_piston::{Feature, Manifest, RuleCompilance};
 use spuz_spawner::{LaunchMod, Layer};
@@ -39,7 +38,7 @@ impl<'a> Layer for LauncherWrench<'a> {
 		self.current_dir.clone_into(launch_mod.current_dir);
 
 		let id = &self.manifest.id;
-		let client_dir = Path::new("versions").join(id.deref());
+		let client_dir = Path::new("versions").join(&**id);
 		let client_jar = client_dir.join(format!("{id}.jar"));
 		let client_natives = client_dir.join("natives");
 

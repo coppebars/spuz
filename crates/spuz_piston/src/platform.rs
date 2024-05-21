@@ -75,7 +75,7 @@ pub enum NativeClassifier {
 	#[serde(rename = "natives-macos")]
 	Macos,
 	#[serde(rename = "natives-osx")]
-	Osx
+	Osx,
 }
 
 impl NativeClassifier {

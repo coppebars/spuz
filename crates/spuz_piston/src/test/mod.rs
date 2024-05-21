@@ -1,8 +1,10 @@
 #![allow(clippy::unwrap_used)]
 
-use paste::paste;
-use crate::Manifest;
 use std::str::FromStr;
+
+use paste::paste;
+
+use crate::Manifest;
 
 macro_rules! should_parse_ok {
   ($($id:literal as $ident:ident,)*) => {
@@ -39,7 +41,6 @@ macro_rules! should_parse_err {
 		}
   };
 }
-
 
 should_parse_ok! {
 	"24w20a" as _24w20a,
