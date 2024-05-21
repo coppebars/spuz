@@ -16,7 +16,6 @@ serde         = { version = "1", features = ["derive", "rc"] }
 serde_json    = { version = "1" }
 
 spuz_piston   = { path = "crates/spuz_piston" }
-spuz_folder   = { path = "crates/spuz_folder" }
 spuz_spawner  = { path = "crates/spuz_spawner" }
 spuz_wrench   = { path = "crates/spuz_wrench" }
 
@@ -24,7 +23,7 @@ spuz_wrench   = { path = "crates/spuz_wrench" }
 [workspace.lints.clippy]
 pedantic = { level = "warn", priority = -1 }
 cargo = { level = "warn", priority = -1 }
-all = "warn"
+all = { level = "warn", priority = -1 }
 unwrap_used = "deny"
 expect_used = "deny"
 module_name_repetitions = "allow"

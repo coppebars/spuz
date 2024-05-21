@@ -1,15 +1,6 @@
-use std::{
-	iter,
-	path::{Path, PathBuf},
-};
+use std::{iter, path::Path};
 
-use spuz_piston::{
-	v::{
-		shared::{Argument, Arguments, ListOrValue},
-		AnyManifest,
-	},
-	Manifest, NativeClassifier, Rule, RuleCompilance, TARGET_OS,
-};
+use spuz_piston::{Argument, Arguments, ListOrValue, Manifest, NativeClassifier, Rule, RuleCompilance, TARGET_OS};
 use spuz_spawner::{LaunchMod, Layer};
 
 use crate::internal::{Classpath, VersionInfo};
@@ -24,71 +15,38 @@ pub struct ManifestLayer<'a> {
 
 impl<'a> Layer for ManifestLayer<'a> {
 	fn apply(self, launch_mod: &mut LaunchMod) {
-		self.manifest.main_class().clone_into(launch_mod.main_class);
+		self.manifest.main_class.as_ref().clone_into(launch_mod.main_class);
 
-		match self.manifest.as_ref() {
-			AnyManifest::V19(manifest) => {
-				push_modern_arguments(self.rulecomp, &manifest.arguments, launch_mod);
-			}
-			AnyManifest::V12(manifest) => {
-				push_modern_arguments(self.rulecomp, &manifest.arguments, launch_mod);
-			}
-		}
+		push_modern_arguments(self.rulecomp, &self.manifest.arguments, launch_mod);
 
 		let check_rule = |rule: &Rule| self.rulecomp.is_met(rule);
 
-		let classpath: Box<dyn Iterator<Item = PathBuf>> = match self.manifest.as_ref() {
-			AnyManifest::V19(manifest) => {
-				let iter = manifest.libraries.iter().filter_map(|lib| {
-					let lib_path = self.libraries_dir.join(&lib.downloads.artifact.path);
+		let iter = self
+			.manifest
+			.libraries
+			.iter()
+			.filter(|lib| match &lib.rules {
+				Some(rules) => rules.iter().all(check_rule),
+				None => true,
+			})
+			.flat_map(|lib| {
+				let main_lib_path = lib.downloads.artifact.as_ref().map(|it| self.libraries_dir.join(&it.path));
 
-					let lib_rule_filter = |rules: &[Rule]| {
-						let all_met = rules.iter().all(check_rule);
-						all_met.then_some(lib_path.clone())
-					};
+				let target_classifier = NativeClassifier::from(TARGET_OS);
+				if let Some(classifier) = lib.downloads.classifiers.as_ref().and_then(|it| it.get(&target_classifier)) {
+					let native_lib_path = self.libraries_dir.join(&classifier.path);
+					[main_lib_path, Some(native_lib_path)]
+				} else {
+					[main_lib_path, None]
+				}
+			})
+			.flatten();
 
-					match &lib.rules {
-						Some(rules) => lib_rule_filter(rules),
-						None => Some(lib_path),
-					}
-				});
-
-				Box::from(iter)
-			}
-			AnyManifest::V12(manifest) => {
-				let iter = manifest
-					.libraries
-					.iter()
-					.filter(|lib| match &lib.rules {
-						Some(rules) => rules.iter().all(check_rule),
-						None => true,
-					})
-					.flat_map(|lib| {
-						let main_lib_path = self.libraries_dir.join(&lib.downloads.artifact.path);
-
-						let target_classifier = NativeClassifier::from(TARGET_OS);
-						if let Some(classifier) = lib.downloads.classifiers.as_ref().and_then(|it| it.get(&target_classifier)) {
-							let native_lib_path = self.libraries_dir.join(&classifier.path);
-							[Some(main_lib_path), Some(native_lib_path)]
-						} else {
-							[Some(main_lib_path), None]
-						}
-					})
-					.flatten();
-
-				Box::from(iter)
-			}
-		};
-
-		let classpath = classpath.chain(iter::once(self.client_jar.to_owned()));
+		let classpath = iter.chain(iter::once(self.client_jar.to_owned()));
 
 		let layers = (
 			Classpath(classpath),
-			VersionInfo {
-				id: self.manifest.id(),
-				version_type: self.manifest.version_type(),
-				asset_index_id: self.manifest.asset_index_id(),
-			},
+			VersionInfo { id: &self.manifest.id, version_type: &self.manifest.r#type, asset_index_id: &self.manifest.assets },
 		);
 
 		layers.apply(launch_mod);
