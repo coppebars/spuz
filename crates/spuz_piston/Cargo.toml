@@ -14,5 +14,8 @@ serde_json = { workspace = true }
 
 cfg-if     = { version = "1" }
 
+[dev-dependencies]
+paste = { version = "1" }
+
 [lints]
 workspace = true

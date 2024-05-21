@@ -68,18 +68,22 @@ impl Arch {
 pub enum NativeClassifier {
 	#[serde(rename = "natives-linux")]
 	Linux,
+	#[serde(rename = "linux-x86_64")]
+	Linux64,
 	#[serde(rename = "natives-windows")]
 	Windows,
 	#[serde(rename = "natives-macos")]
 	Macos,
+	#[serde(rename = "natives-osx")]
+	Osx,
 }
 
 impl NativeClassifier {
 	pub fn into_os(self) -> Os {
 		match self {
-			NativeClassifier::Linux => Os::Linux,
+			NativeClassifier::Linux | NativeClassifier::Linux64 => Os::Linux,
 			NativeClassifier::Windows => Os::Windows,
-			NativeClassifier::Macos => Os::Osx,
+			NativeClassifier::Macos | NativeClassifier::Osx => Os::Osx,
 		}
 	}
 

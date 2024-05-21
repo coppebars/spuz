@@ -1,45 +1,31 @@
+mod err;
+mod jres;
+
 use std::{path::Path, sync::Arc};
 
 use tokio::fs::{canonicalize, create_dir_all};
 use tracing::info;
 
-pub use crate::err::{Error, Result};
-use crate::{instances::Instances, jres::Jres, libraries::Libraries, versions::Versions};
-
-mod err;
-mod instances;
-mod jres;
-mod libraries;
-mod versions;
+pub use crate::{
+	err::{Error, Result},
+	jres::JavaRuntimes,
+};
 
 #[derive(Debug)]
 pub struct Folder {
 	pub root: Arc<Path>,
+	pub java_runtimes: JavaRuntimes,
 }
 
 impl Folder {
 	pub async fn settle(root: impl AsRef<Path>) -> Result<Arc<Self>> {
-		let root = canonicalize(root.as_ref()).await?.into();
+		let root = Arc::from(canonicalize(root.as_ref()).await?);
 		create_dir_all(&root).await?;
 
 		info!("Spuz folder settled into {root:?}");
 
-		Ok(Self { root }.into())
-	}
+		let java_runtimes = JavaRuntimes::from_folder_root(&root);
 
-	pub fn versions(&self) -> Versions {
-		Versions::from_folder_root(&self.root)
-	}
-
-	pub fn instances(&self) -> Instances {
-		Instances::from_folder_root(&self.root)
-	}
-
-	pub fn libraries(&self) -> Libraries {
-		Libraries::from_folder_root(&self.root)
-	}
-
-	pub fn jres(&self) -> Jres {
-		Jres::from_folder_root(&self.root)
+		Ok(Self { root, java_runtimes }.into())
 	}
 }

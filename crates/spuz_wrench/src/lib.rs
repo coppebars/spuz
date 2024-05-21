@@ -37,8 +37,8 @@ impl<'a> Layer for LauncherWrench<'a> {
 
 		self.current_dir.clone_into(launch_mod.current_dir);
 
-		let id = self.manifest.id();
-		let client_dir = Path::new("versions").join(self.manifest.id());
+		let id = &self.manifest.id;
+		let client_dir = Path::new("versions").join(&**id);
 		let client_jar = client_dir.join(format!("{id}.jar"));
 		let client_natives = client_dir.join("natives");
 

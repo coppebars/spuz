@@ -123,7 +123,7 @@ impl PlatformRequirement {
 pub struct Rule {
 	pub action: RuleAction,
 	#[serde(flatten)]
-	pub condition: RuleCondition,
+	pub condition: Option<RuleCondition>,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -169,8 +169,9 @@ impl RuleCompilance {
 
 	pub fn is_met(&self, rule: &Rule) -> bool {
 		let compilance = match &rule.condition {
-			RuleCondition::Platform(req) => req.is_met(),
-			RuleCondition::Features(features) => features.iter().all(|it| self.features.contains(it)),
+			Some(RuleCondition::Platform(req)) => req.is_met(),
+			Some(RuleCondition::Features(features)) => features.iter().all(|it| self.features.contains(it)),
+			None => true,
 		};
 
 		match rule.action {
