@@ -5,8 +5,10 @@ edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
-description = "1"
+description = "Minecraft json documents described in Rust"
 readme = "readme.md"
+keywords = ["minecraft", "launcher", "piston-meta"]
+categories = ["parsing"]
 
 [dependencies]
 serde       = { version = "1", features = ["derive"] }
