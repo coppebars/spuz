@@ -1,33 +1,39 @@
-# Spuz
-###### Pronounced as `Spo͞ozh`
+![spuz_banner](https://github.com/coppebars/spuz/assets/81296950/0002ebbf-35a5-4878-bdbb-d3b9b3339a85)
 ###### Tools to manage and launch minecraft programmatically
 
 > [!Warning]
 > #### Under Development
 > ###### Some parts are still in the design stage and their API will constantly change and contain `todo!()`s or incompleted features with empty or `panic!()` functions.
 
+## Stable crates
+* **spuz_piston** - https://crates.io/crates/spuz_piston
+* **spuz_spawner** - _unpublished yet_
+* **spuz_wrench** - _unpublished yet_
+
 ## Milestones
 - `spuz_piston` - Description of a variety of minecraft json specifications
-    - [x] Version manifest `1.19+`
+    - [x] Version manifest `>1.12`
     - [x] Asset index
     - [x] Listing
-    - [x] Support for older versions `1.12+`
     - [x] Launcher profile
+    - [x] Java runtimes manifest
+    - [ ] Support for older versions `<=1.12`
+    - [ ] Docs
 - `spuz_spawner` - Helpers for spawning java runtime
     - [x] Spawning java
     - [x] Easy way to apply argument changes
     - [x] Crossplatform
+    - [ ] Docs
 - `spuz_wrench` - Layers for `spuz_spawner` to configure java runtime command to launch game from version manifest
-    - [x] Support variables `1.16+`
+    - [x] Support variables `>1.12`
     - [x] Conditional arguments and libraries (depending on target os and arch) `1.19+`
-    - [x] Support for older versions `1.12+`
     - [x] Friendly and typed builder
-- `spuz_get` - Concurrent file downloader. Will download minecraft for you.
-    - [x] Download files concurrently
-    - [x] Progress tracking
-    - [x] Support lzma decompression
-    - [ ] Verify hash?
-    - [ ] Retry on error
+    - [ ] Docs
+- `spuz_get` - Pack of apis to get any versions of the game, even modded, such as fabric, quilt, forge, etc.
+    - [ ] Vanilla
+    - [ ] Fabric
+    - [ ] Forge
+    - [ ] Docs
 - `spuz_folder` - To manage minecraft installations, versions, instances, mods, etc...
     - ###### under design
 
