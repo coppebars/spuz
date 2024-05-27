@@ -10,7 +10,10 @@ use serde::{
 	Deserialize, Deserializer, Serialize, Serializer,
 };
 
-use crate::{Arch, Arr, Os, Str};
+use crate::{
+	platform::{Arch, Os},
+	Arr, Str,
+};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum Feature {

@@ -1,6 +1,11 @@
 use std::{iter, path::Path};
 
-use spuz_piston::{Argument, Arguments, ListOrValue, Manifest, NativeClassifier, Rule, RuleCompilance, TARGET_OS};
+use spuz_piston::{
+	manifest::{Argument, Arguments, ListOrValue},
+	platform::{NativeClassifier, TARGET_OS},
+	rule::{Rule, RuleCompilance},
+	Manifest,
+};
 use spuz_spawner::{LaunchMod, Layer};
 
 use crate::internal::{Classpath, VersionInfo};

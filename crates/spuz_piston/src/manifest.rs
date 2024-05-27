@@ -1,12 +1,17 @@
 use std::{
 	collections::HashMap,
 	fmt::{Debug, Display},
+	ops::Deref,
 	str::FromStr,
 };
 
 use serde::{Deserialize, Serialize};
 
-use crate::{Arr, BoxPath, ConditionalValue, NativeClassifier, Rule, Size, Str};
+use crate::{
+	platform::NativeClassifier,
+	rule::{ConditionalValue, Rule},
+	Arr, BoxPath, Size, Str,
+};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(untagged)]
@@ -58,6 +63,49 @@ pub struct Specifiers {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct DownloadItem {
+	pub sha1: Str,
+	pub size: Size,
+	pub url: Str,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Downloads {
+	pub client: DownloadItem,
+	pub client_mappings: Option<DownloadItem>,
+	pub server: DownloadItem,
+	pub server_mappings: Option<DownloadItem>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct LoggingFile {
+	pub id: Str,
+	pub sha1: Str,
+	pub size: Size,
+	pub url: Str,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ClientLogging {
+	pub argument: Str,
+	pub file: LoggingFile,
+	pub r#type: Str,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct Logging {
+	pub client: ClientLogging,
+}
+
+impl Deref for Logging {
+	type Target = ClientLogging;
+
+	fn deref(&self) -> &Self::Target {
+		&self.client
+	}
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Manifest {
 	pub r#type: Str,
@@ -69,6 +117,8 @@ pub struct Manifest {
 	pub asset_index: AssetIndexRef,
 	pub libraries: Arr<Library>,
 	pub arguments: Arguments,
+	pub downloads: Downloads,
+	pub logging: Logging,
 }
 
 impl FromStr for Manifest {

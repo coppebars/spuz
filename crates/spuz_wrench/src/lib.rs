@@ -4,7 +4,10 @@ mod opts;
 
 use std::{collections::HashSet, path::Path};
 
-use spuz_piston::{Feature, Manifest, RuleCompilance};
+use spuz_piston::{
+	rule::{Feature, RuleCompilance},
+	Manifest,
+};
 use spuz_spawner::{LaunchMod, Layer};
 use typed_builder::TypedBuilder;
 
