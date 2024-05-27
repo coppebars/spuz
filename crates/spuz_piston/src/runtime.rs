@@ -1,5 +1,9 @@
-use std::{collections::HashMap, ops::Deref, str::FromStr};
-use std::fmt::{Debug, Display, Formatter};
+use std::{
+	collections::HashMap,
+	fmt::{Debug, Display, Formatter},
+	ops::Deref,
+	str::FromStr,
+};
 
 use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};

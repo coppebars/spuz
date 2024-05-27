@@ -1,6 +1,8 @@
-use std::collections::HashMap;
-use std::fmt::{Debug, Display, Formatter};
-use std::str::FromStr;
+use std::{
+	collections::HashMap,
+	fmt::{Debug, Display, Formatter},
+	str::FromStr,
+};
 
 use serde::{Deserialize, Serialize};
 
