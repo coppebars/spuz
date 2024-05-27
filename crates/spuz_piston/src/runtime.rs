@@ -1,4 +1,9 @@
-use std::{collections::HashMap, ops::Deref, str::FromStr};
+use std::{
+	collections::HashMap,
+	fmt::{Debug, Display, Formatter},
+	ops::Deref,
+	str::FromStr,
+};
 
 use cfg_if::cfg_if;
 use serde::{Deserialize, Serialize};
@@ -223,5 +228,11 @@ impl FromStr for RuntimeManifest {
 
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
 		serde_json::from_str(s)
+	}
+}
+
+impl Display for RuntimeManifest {
+	fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+		serde_json::to_string(self).map_err(|_| std::fmt::Error).fmt(f)
 	}
 }
