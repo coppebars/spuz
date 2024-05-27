@@ -1,4 +1,8 @@
-use std::{collections::HashMap, fmt::Debug, str::FromStr};
+use std::{
+	collections::HashMap,
+	fmt::{Debug, Display},
+	str::FromStr,
+};
 
 use serde::{Deserialize, Serialize};
 
@@ -72,5 +76,11 @@ impl FromStr for Manifest {
 
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
 		serde_json::from_str(s)
+	}
+}
+
+impl Display for Manifest {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		serde_json::to_string(self).map_err(|_| std::fmt::Error).fmt(f)
 	}
 }
