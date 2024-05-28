@@ -18,19 +18,6 @@ use tokio::fs::File;
 ///
 /// It is recommended that you perform one of the actions immediately, as
 /// prolonged inactivity may result in a timeout.
-///
-/// # Example
-/// ```no_run
-/// # use pollster::FutureExt;///
-/// # async move {
-/// let json_resource = todo!();
-///
-/// let result = json_resource.json().await?;
-/// // Or
-/// json_resource.save("./local.json").await?;
-/// # Result::<(), spuz_get::Error>::Ok(())
-/// # }.block_on()
-/// ```
 pub struct JsonResource<R, D> {
 	pub(crate) stream: R,
 	pub(crate) json: PhantomData<D>,
