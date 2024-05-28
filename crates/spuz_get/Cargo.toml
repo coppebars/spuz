@@ -5,15 +5,32 @@ edition.workspace = true
 authors.workspace = true
 license.workspace = true
 repository.workspace = true
-readme.workspace = true
+description = "Pack of apis to get any versions of the game, even modded, such as fabric, quilt, forge, etc"
+readme = "readme.md"
+keywords = ["minecraft", "launcher", "downlaoder", "client"]
+categories = []
 
 [dependencies]
-arc-swap   = { version = "1" }
-reqwest    = { version = "0", features = ["json"] }
-serde      = { workspace = true }
-serde_json = { workspace = true }
+spuz_piston = { workspace = true }
+
+thiserror    = { version = "1" }
+reqwest      = { version = "0.12", features = ["json", "stream"], optional = true }
+url          = { version = "2" }
+async-trait  = { version = "0.1" }
+serde        = { version = "1", features = ["derive"] }
+serde_json   = { version = "1" }
+tokio        = { version = "1", features = ["fs"] }
+futures-lite = { version = "2" }
+futures-util = { version = "0.3", features = ["io"], optional = true }
+async-compat = { version = "0.2" }
+
+[dev-dependencies]
+pollster = { version = "0.3" }
+
+[features]
+default = ["reqwest", "vanilla"]
+reqwest = ["dep:reqwest", "dep:futures-util"]
+vanilla = []
 
 [lints]
 workspace = true
-
-[features]
