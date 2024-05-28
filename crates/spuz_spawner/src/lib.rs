@@ -4,13 +4,11 @@ use tokio::process::Command;
 use tracing::debug;
 
 pub use crate::{
-	err::{Error, Result},
 	layer::{LaunchMod, Layer},
 	process::LaunchCommand,
 };
 
 pub mod compose;
-mod err;
 mod layer;
 mod process;
 #[cfg(feature = "useful-layers")]

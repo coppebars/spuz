@@ -1,8 +1,8 @@
 use async_channel::Receiver;
+use thiserror::Error;
 use tokio::process::Command;
 #[cfg(feature = "process-handle")]
 use {
-	crate::Result,
 	async_channel::unbounded,
 	std::sync::Arc,
 	tokio::{io::AsyncReadExt, sync::Notify},
@@ -23,7 +23,7 @@ impl LaunchCommand {
 	}
 
 	#[cfg(feature = "process-handle")]
-	pub fn spawn(self) -> Result<ProcessHandle> {
+	pub fn spawn(self) -> Result<ProcessHandle, SpawnError> {
 		let mut cmd = self.into_command();
 		let mut child = cmd.spawn()?;
 		// # SAFETY
@@ -94,4 +94,12 @@ impl From<LaunchCommand> for Command {
 pub struct ProcessHandle {
 	pub exit: Arc<Notify>,
 	pub logs: Receiver<String>,
+}
+
+#[derive(Debug, Error)]
+#[error("Failed to spawn process: {source}")]
+pub struct SpawnError {
+	#[from]
+	#[source]
+	source: std::io::Error,
 }
