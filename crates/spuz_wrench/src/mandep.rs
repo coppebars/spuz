@@ -59,11 +59,11 @@ impl<'a> Layer for ManifestLayer<'a> {
 }
 
 fn push_modern_arguments(rulcomp: &RuleCompilance, args: &Arguments, launch_mod: &mut LaunchMod) {
-	for arg in args.jvm.iter() {
+	for arg in &args.jvm {
 		push_modern_arg(rulcomp, launch_mod.java_args, arg);
 	}
 
-	for arg in args.game.iter() {
+	for arg in &args.game {
 		push_modern_arg(rulcomp, launch_mod.app_args, arg);
 	}
 }
