@@ -1,4 +1,5 @@
 mod internal;
+pub mod macros;
 mod mandep;
 mod opts;
 
